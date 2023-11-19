@@ -15,7 +15,7 @@ def verificar_instacao_python(elemento: tk.Entry):
     privilegios = "runas"  # Aumentar o nível de privilégios
     terminal = "powershell.exe"  # Caminho do executável do power shell
 
-    if ShellExecuteEx(lpFile=terminal, lpParameters=cmd):
+    if ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd):
         # Adicioanar mensagem ao quadro principal
         elemento.insert(
             tk.END, "O python já está instalado!\n")
