@@ -1,12 +1,9 @@
+from quadros.quadro import (
+    mostrar_texto, clicar_no_botao, entrada_de_dados, clicar_no_botao_expassado)
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
 from tkinter.filedialog import askdirectory
-from win32com.shell.shell import ShellExecuteEx
-# from platform import system
-
-
-from quadros.quadro import (
-    mostrar_texto, clicar_no_botao, entrada_de_dados, clicar_no_botao_expassado)
+import win32comext.shell.shell as shell
 
 
 def verificar_instacao_python(elemento: tk.Entry):
@@ -15,7 +12,7 @@ def verificar_instacao_python(elemento: tk.Entry):
     privilegios = "runas"  # Aumentar o nível de privilégios
     terminal = "powershell.exe"  # Caminho do executável do power shell
 
-    if ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd):
+    if shell.ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd):
         # Adicioanar mensagem ao quadro principal
         elemento.insert(
             tk.END, "O python já está instalado!\n")
@@ -24,22 +21,6 @@ def verificar_instacao_python(elemento: tk.Entry):
         elemento.insert(
             tk.END, "O python NÃO está instalado!\n")
         elemento.update_idletasks()
-    # except ImportError:
-    #     # Adicioanar mensagem ao quadro principal
-    #     elemento.insert(
-    #         tk.END, "É só o inicio...\nEstamos fazendo a instalação do Python v-3.11.5")
-    #     elemento.update_idletasks()
-
-    #     cmd = "& python-3.11.5-amd64.exe"
-    #     privilegios = "runas"  # Aumentar o nível de privilégios
-    #     terminal = "powershell.exe"  # Caminho do executável do power shell
-
-    #     ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd)
-
-    #     # Adiciona a mensagem de sucesso ao quadro principal
-    #     elemento.insert(
-    #         tk.END, "\nPronto!\nPython instalado com sucesso!\n")
-    #     elemento.update_idletasks()
 
 
 def criar_ambiente_virtual(caminho_arquivo: str, elemento: scrolledtext.ScrolledText):
@@ -90,7 +71,6 @@ def ativar_politicas_execucao(elemento: scrolledtext.ScrolledText):
         elemento : scrolledtext.ScrolledText (widget caixa de texto grande)
     return: void
     '''
-    from win32com.shell.shell import ShellExecuteEx
     # Adicioanar mensagem ao quadro principal
     elemento.insert(
         tk.END, "\nAtivando políticas de execução")
@@ -100,7 +80,7 @@ def ativar_politicas_execucao(elemento: scrolledtext.ScrolledText):
     privilegios = "runas"  # Aumentar o nível de privilégios
     terminal = "powershell.exe"  # Caminho do executável do power shell
 
-    ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd)
+    shell.ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd)
 
     # Adiciona a mensagem de sucesso ao quadro principal
     elemento.insert(
