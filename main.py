@@ -1,26 +1,48 @@
+'''Arquivo principal'''
+# Frames
 from quadros.quadro import (
-    mostrar_texto, clicar_no_botao, entrada_de_dados, clicar_no_botao_expassado)
+    mostrar_texto, clicar_no_botao, entrada_de_dados,
+    clicar_no_botao_expassado, caixa_de_mensagem_informativa,
+    caixa_de_mensagem_erro)
+# Bibliotecas principais do projeto
 import tkinter as tk
-from tkinter import messagebox, scrolledtext
+from tkinter import scrolledtext
 from tkinter.filedialog import askdirectory
+
+# Utilitário
 import win32comext.shell.shell as shell
+from win32event import error
 
 
-def verificar_instacao_python(elemento: tk.Entry):
-    '''...'''
+def verificar_instacao_python(elemento: tk.Entry) -> bool:
+    '''
+    ## Verificar Instalação do Python
+    ---
+    Verifica se o Python está instalado
+    ### Atribuições
+    ---
+    1. Executa o Power Shell como ADM da máquina;
+    2. Verifica se o Python está instalado
+    3. Retorna ao usuário se o está instalado na caixa grande de texto\n
+    parâmetros:
+    elemento : tk.Entry (widget caixa de texto grande)
+    return: void
+    '''
     cmd = "python --version"
     privilegios = "runas"  # Aumentar o nível de privilégios
     terminal = "powershell.exe"  # Caminho do executável do power shell
 
-    if shell.ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd):
-        # Adicioanar mensagem ao quadro principal
-        elemento.insert(
-            tk.END, "O python já está instalado!\n")
-        elemento.update_idletasks()
-    else:
-        elemento.insert(
-            tk.END, "O python NÃO está instalado!\n")
-        elemento.update_idletasks()
+    try:
+        execute = shell.ShellExecuteEx(
+            lpVerb=privilegios, lpFile=terminal, lpParameters=cmd)
+        if not execute:
+            # Adicioanar mensagem ao quadro principal
+            elemento.insert(tk.END, 'O python NÃO está instalado!\n')
+            elemento.update_idletasks()
+    except error:
+        caixa_de_mensagem_erro(
+            "Erro!", "Erro ao verificar se o Python está instalado.")
+    return True
 
 
 def criar_ambiente_virtual(caminho_arquivo: str, elemento: scrolledtext.ScrolledText):
@@ -51,10 +73,13 @@ def criar_ambiente_virtual(caminho_arquivo: str, elemento: scrolledtext.Scrolled
         elemento.insert(
             tk.END, "\nPronto!\nAmbiente virtual criado com sucesso!\n")
         elemento.update_idletasks()
-        messagebox.showinfo(
+
+        # Envia mensagem de sucesso na tela
+        caixa_de_mensagem_informativa(
             "Sucesso!", "Ambiente virtual criado com sucesso!")
     except CalledProcessError:
-        messagebox.showerror(
+        # Envia mensagem de erro na tela
+        caixa_de_mensagem_erro(
             "Erro", "Ocorreu um erro ao executar a operação de criar pasta venv.")
 
 
@@ -80,31 +105,45 @@ def ativar_politicas_execucao(elemento: scrolledtext.ScrolledText):
     privilegios = "runas"  # Aumentar o nível de privilégios
     terminal = "powershell.exe"  # Caminho do executável do power shell
 
-    shell.ShellExecuteEx(lpVerb=privilegios, lpFile=terminal, lpParameters=cmd)
-
+    try:
+        shell.ShellExecuteEx(lpVerb=privilegios,
+                             lpFile=terminal, lpParameters=cmd)
+    except error:
+        caixa_de_mensagem_erro("Erro!", f"Erro ao ativar políticas de execução.")
     # Adiciona a mensagem de sucesso ao quadro principal
     elemento.insert(
-        tk.END, "\nPronto!\nPolíticas de execução ativadas!\n")
+        tk.END, "\n\nPronto!\nPolíticas de execução ativadas!\n")
     elemento.update_idletasks()
 
 
 def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk.Tk):
-    '''Cria uma sequencia de tarefas para criar o projeto.
-
+    '''
+    ## Instancias
+    ---
+    Instância uma sequencia de tarefas para criar o projeto 
+    com base no caminho do arquivo.
+    ---
     parâmetros:
         caminho_do_projeto : str -> caminho da pasta do projeto
         elementos : list[tkinter] -> elemento qualquer que vai receber ou que vai enviar 
     return void
     '''
-    verificar_instacao_python(elemento=elementos[0])
+    if not verificar_instacao_python(elemento=elementos[0]):
+        # Manda mensagem de erro
+        caixa_de_mensagem_erro(
+            'Erro!', 'O python não está instalado! \nSiga as recomendações no repositório do projeto.')
     criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
                            elemento=elementos[0])
     ativar_politicas_execucao(elemento=elementos[0])
 
 
 def selecionar_caminho_pasta(elemento: tk.Entry) -> str:
-    '''Seleciona caminho da pasta para criar um novo novo projeto
-
+    '''
+    ## Selecionar Caminho Pasta
+    ---
+    Seleciona caminho da pasta para criar um novo novo projeto
+    ### Atribuições
+    ---
     parâmetros:
         elemento : tkinter.Entry
 
