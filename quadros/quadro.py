@@ -4,6 +4,14 @@ import tkinter as tk
 from tkinter import messagebox, scrolledtext
 
 
+def caixa_de_texto_grande(janela: tk.Tk) -> scrolledtext.ScrolledText:
+    '''Uma caixa de texto grande'''
+    texto_de_saida = scrolledtext.ScrolledText(
+        janela, wrap=tk.WORD, width=40, height=10)
+    texto_de_saida.pack()
+    return texto_de_saida
+
+
 def mostrar_texto(titulo: str, quadro: tk.Tk):
     '''Uma especie de label personalizado'''
     texto = tk.Label(

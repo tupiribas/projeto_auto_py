@@ -3,7 +3,7 @@
 from quadros.quadro import (
     mostrar_texto, clicar_no_botao, entrada_de_dados,
     clicar_no_botao_expassado, caixa_de_mensagem_informativa,
-    caixa_de_mensagem_erro)
+    caixa_de_mensagem_erro, caixa_de_texto_grande)
 # Bibliotecas principais do projeto
 import tkinter as tk
 from tkinter import scrolledtext
@@ -109,7 +109,8 @@ def ativar_politicas_execucao(elemento: scrolledtext.ScrolledText):
         shell.ShellExecuteEx(lpVerb=privilegios,
                              lpFile=terminal, lpParameters=cmd)
     except error:
-        caixa_de_mensagem_erro("Erro!", f"Erro ao ativar políticas de execução.")
+        caixa_de_mensagem_erro(
+            "Erro!", f"Erro ao ativar políticas de execução.")
     # Adiciona a mensagem de sucesso ao quadro principal
     elemento.insert(
         tk.END, "\n\nPronto!\nPolíticas de execução ativadas!\n")
@@ -176,9 +177,7 @@ def main():
         "Procurar Pasta...", lambda: selecionar_caminho_pasta(elemento_caminho_pasta), quadro)
 
     # Visualização do processo de instrâcia do novo projeto
-    texto_de_saida = scrolledtext.ScrolledText(
-        janela, wrap=tk.WORD, width=40, height=10)
-    texto_de_saida.pack()
+    texto_de_saida = caixa_de_texto_grande(janela=janela)
 
     # Enviar dados do projeto ou sair
     clicar_no_botao_expassado(
