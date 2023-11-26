@@ -4,14 +4,18 @@ from quadros.quadro import (
     mostrar_texto, clicar_no_botao, entrada_de_dados,
     clicar_no_botao_expassado, caixa_de_mensagem_informativa,
     caixa_de_mensagem_erro, caixa_de_texto_grande)
+
 # Bibliotecas principais do projeto
 import tkinter as tk
-from tkinter import scrolledtext
 from tkinter.filedialog import askdirectory
 
 # Utilitário
 import win32comext.shell.shell as shell
 from win32event import error
+
+
+# Largura padrão para todos os elementos do quadro pack chamados
+LARGURA_VERTICAL_PADRAO = 15
 
 
 def verificar_instacao_python(elemento: tk.Entry) -> bool:
@@ -45,7 +49,7 @@ def verificar_instacao_python(elemento: tk.Entry) -> bool:
     return True
 
 
-def criar_ambiente_virtual(caminho_arquivo: str, elemento: scrolledtext.ScrolledText):
+def criar_ambiente_virtual(caminho_arquivo: str, elemento: tk):
     '''
     ## Criando o Ambienten Virtual
 
@@ -83,7 +87,7 @@ def criar_ambiente_virtual(caminho_arquivo: str, elemento: scrolledtext.Scrolled
             "Erro", "Ocorreu um erro ao executar a operação de criar pasta venv.")
 
 
-def ativar_politicas_execucao(elemento: scrolledtext.ScrolledText):
+def ativar_politicas_execucao(elemento: tk):
     '''## Politicas Execução no Windows
     Comando executado no shell como adm:\n
     >>> "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine"
@@ -117,7 +121,7 @@ def ativar_politicas_execucao(elemento: scrolledtext.ScrolledText):
     elemento.update_idletasks()
 
 
-def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk.Tk):
+def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk):
     '''
     ## Instancias
     ---
@@ -170,14 +174,16 @@ def main():
     quadro.pack(padx=20, pady=20)
 
     # Obter o caminho da pasta do novo projeto
-    mostrar_texto(
-        "Informe a pasta do novo projeto:", quadro)
-    elemento_caminho_pasta = entrada_de_dados(50, quadro)
-    clicar_no_botao(
-        "Procurar Pasta...", lambda: selecionar_caminho_pasta(elemento_caminho_pasta), quadro)
+    mostrar_texto(titulo="Informe a pasta do novo projeto:",
+                  quadro=quadro)
+    elemento_caminho_pasta = entrada_de_dados(largura=50, quadro=quadro)
+    clicar_no_botao(titulo="Procurar Pasta...",
+                    comando=lambda: selecionar_caminho_pasta(
+                        elemento=elemento_caminho_pasta),
+                    quadro=quadro)
 
     # Visualização do processo de instrâcia do novo projeto
-    texto_de_saida = caixa_de_texto_grande(janela=janela)
+    texto_de_saida = caixa_de_texto_grande(quadro=quadro)
 
     # Enviar dados do projeto ou sair
     clicar_no_botao_expassado(

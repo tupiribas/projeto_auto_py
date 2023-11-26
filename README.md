@@ -59,6 +59,10 @@ Para mais informações: [Link do instalador para mais versões](https://www.pyt
 #### 4. Projeto Criado com Sucesso: 
 ![Mostrando a pasta .env (ambiente virtual) do Python criada e mostrando a mensagem do projeto criado com sucesso.](demo/04_projeto_criado_com_sucesso.png)
 
+
+### Processos no Windows
+![Esse foi o processo de carga da memória RAM](demo/processo_memoria_em_exec.png)
+
 ## 🛠️ Bibliotecas
 
 * [Tcl/Tkinter -v ](https://docs.python.org/3/library/tkinter.html) - Biblioteca Nativa do proprio python
