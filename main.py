@@ -3,7 +3,7 @@
 from quadros.quadro import (
     mostrar_texto, clicar_no_botao, entrada_de_dados,
     clicar_no_botao_expassado, caixa_de_mensagem_informativa,
-    caixa_de_mensagem_erro, caixa_de_texto_grande)
+    caixa_de_mensagem_erro, caixa_de_texto_grande, caixa_de_selecao)
 
 # Bibliotecas principais do projeto
 import tkinter as tk
@@ -12,7 +12,7 @@ from tkinter.filedialog import askdirectory
 # Utilitário
 import win32comext.shell.shell as shell
 from win32event import error
-
+from tkinter import StringVar
 
 # Largura padrão para todos os elementos do quadro pack chamados
 LARGURA_VERTICAL_PADRAO = 15
@@ -137,9 +137,26 @@ def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk):
         # Manda mensagem de erro
         caixa_de_mensagem_erro(
             'Erro!', 'O python não está instalado! \nSiga as recomendações no repositório do projeto.')
-    criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
-                           elemento=elementos[0])
-    ativar_politicas_execucao(elemento=elementos[0])
+    # criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
+    #                        elemento=elementos[0])
+    # ativar_politicas_execucao(elemento=elementos[0])
+    caixa_de_mensagem_informativa('teste', elementos[1])
+
+
+# def verificar_instalacao_git():
+#     # aqui você precisa acessar o estado da caixa de seleção do Git
+#     git_selecionado = estado
+#     if git_selecionado:
+#         # Coloque aqui o código para instalar o Git via terminal
+#         # Por exemplo, se estiver usando o Windows:
+#         cmd_instalacao_git = "seu_comando_de_instalacao_do_git"
+#         # Execute o comando para instalar o Git
+#         try:
+#             # Use subprocess ou outras bibliotecas para executar comandos no terminal
+#             # subprocess.run(cmd_instalacao_git, shell=True) - exemplo de como usar subprocess
+#             pass  # Substitua este pass pelo código de instalação real
+#         except Exception as e:
+#             print(f"Erro ao instalar o Git: {e}")
 
 
 def selecionar_caminho_pasta(elemento: tk.Entry) -> str:
@@ -182,6 +199,11 @@ def main():
                         elemento=elemento_caminho_pasta),
                     quadro=quadro)
 
+    # Selecionar instaladores
+    caixa_selecao_git = caixa_de_selecao(titulo='Git',
+                                         comando=None,
+                                         quadro=quadro)
+
     # Visualização do processo de instrâcia do novo projeto
     texto_de_saida = caixa_de_texto_grande(quadro=quadro)
 
@@ -190,7 +212,10 @@ def main():
         titulo="Cancelar", largura=5, altura=5, comando=janela.destroy, quadro=janela)
     clicar_no_botao_expassado(
         titulo="Enviar", largura=5, altura=5,
-        comando=lambda: instancias_do_projeto(elemento_caminho_pasta.get(), texto_de_saida), quadro=janela)
+        comando=lambda: instancias_do_projeto(
+            elemento_caminho_pasta.get(),
+            texto_de_saida,
+            caixa_selecao_git), quadro=janela)
 
     janela.mainloop()
 
