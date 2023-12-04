@@ -90,7 +90,7 @@ def criar_ambiente_virtual(caminho_arquivo: str, elemento: tk):
 def ativar_politicas_execucao(elemento: tk):
     '''## Politicas Execução no Windows
     Comando executado no shell como adm:\n
-    >>> "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine"
+    >>> "Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force"
 
     ### Atribuições
     1. Permite que o usuário possa executar a ativação do ambiente virutal (.env).
@@ -105,7 +105,7 @@ def ativar_politicas_execucao(elemento: tk):
         tk.END, "\nAtivando políticas de execução")
     elemento.update_idletasks()
 
-    cmd = "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine"
+    cmd = "Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force"
     privilegios = "runas"  # Aumentar o nível de privilégios
     terminal = "powershell.exe"  # Caminho do executável do power shell
 
@@ -199,7 +199,7 @@ def main():
                         elemento=elemento_caminho_pasta),
                     quadro=quadro)
 
-    # Selecionar instaladores
+    # Selecionar instaladores - falta incluir função na caixa de seleção
     caixa_selecao_git = caixa_de_selecao(titulo='Git',
                                          comando=None,
                                          quadro=quadro)

@@ -3,7 +3,7 @@ from tkinter import Tk
 from tkinter import Label
 from tkinter import Entry
 from tkinter import Button
-from tkinter.ttk import Checkbutton
+from tkinter import Checkbutton
 from tkinter import WORD
 from tkinter.scrolledtext import ScrolledText
 from tkinter.messagebox import showinfo, showerror
