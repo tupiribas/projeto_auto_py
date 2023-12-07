@@ -11,8 +11,8 @@ from tkinter.filedialog import askdirectory
 
 # Utilitário
 import win32comext.shell.shell as shell
+from subprocess import check_output, STDOUT, CalledProcessError
 from win32event import error
-from tkinter import StringVar
 
 # Largura padrão para todos os elementos do quadro pack chamados
 LARGURA_VERTICAL_PADRAO = 15
@@ -22,7 +22,7 @@ def verificar_instacao_python(elemento: tk.Entry) -> bool:
     '''
     ## Verificar Instalação do Python
     ---
-    Verifica se o Python está instalado
+    Verifica se o Python está instalado na máquina local
     ### Atribuições
     ---
     1. Executa o Power Shell como ADM da máquina;
@@ -47,6 +47,45 @@ def verificar_instacao_python(elemento: tk.Entry) -> bool:
         caixa_de_mensagem_erro(
             "Erro!", "Erro ao verificar se o Python está instalado.")
     return True
+
+
+def verificar_instalacao_git(elemento: tk):
+    '''
+    ## Verificar Instalação do Git
+    ---
+    Verifica se o Git está instalado na máquina local
+    ### Atribuições
+    ---
+    1. Verifica se o Python está instalado via terminal
+    2. Retorna ao usuário se o está instalado na caixa grande de texto\n
+    parâmetros:
+    elemento : tk.Entry (widget caixa de texto grande)
+    return: void
+    '''
+    # Por exemplo, se estiver usando o Windows:
+    cmd = "git --version"
+
+    elemento.insert(
+        tk.END, "\nVerificando se o Git está instalado...")
+    elemento.update_idletasks()
+
+    # Execute o comando de verificação do Git
+    try:
+        saida_terminal = check_output(args=cmd,
+                                      shell=False,
+                                      stderr=STDOUT,
+                                      text=True)
+        # Enviar mensagem final positiva
+        elemento.insert(
+            tk.END, "\n\nExcelente!\nO Git já está instalado!")
+        elemento.update_idletasks()
+        print(saida_terminal)
+    except CalledProcessError as er:
+        # Enviar mensagem final positiva
+        elemento.insert(
+            tk.END, "\n\nOpa!\nO GIT NÃO ESTÁ INSTALADO!")
+        elemento.update_idletasks()
+        print(f"Retorno da verificação da instalação do Git: {er}")
 
 
 def criar_ambiente_virtual(caminho_arquivo: str, elemento: tk):
@@ -140,23 +179,8 @@ def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk):
     # criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
     #                        elemento=elementos[0])
     # ativar_politicas_execucao(elemento=elementos[0])
-    caixa_de_mensagem_informativa('teste', elementos[1])
-
-
-# def verificar_instalacao_git():
-#     # aqui você precisa acessar o estado da caixa de seleção do Git
-#     git_selecionado = estado
-#     if git_selecionado:
-#         # Coloque aqui o código para instalar o Git via terminal
-#         # Por exemplo, se estiver usando o Windows:
-#         cmd_instalacao_git = "seu_comando_de_instalacao_do_git"
-#         # Execute o comando para instalar o Git
-#         try:
-#             # Use subprocess ou outras bibliotecas para executar comandos no terminal
-#             # subprocess.run(cmd_instalacao_git, shell=True) - exemplo de como usar subprocess
-#             pass  # Substitua este pass pelo código de instalação real
-#         except Exception as e:
-#             print(f"Erro ao instalar o Git: {e}")
+    if elementos[1] == 1:
+        verificar_instalacao_git(elemento=elementos[0])
 
 
 def selecionar_caminho_pasta(elemento: tk.Entry) -> str:
@@ -199,10 +223,15 @@ def main():
                         elemento=elemento_caminho_pasta),
                     quadro=quadro)
 
+    # Variável de estado - caixa de selecao
+    mostrar_texto(titulo="Quais programas você deseja instalar?",
+                  quadro=quadro)
+    estado_caixa_selecao_git = tk.IntVar()
     # Selecionar instaladores - falta incluir função na caixa de seleção
-    caixa_selecao_git = caixa_de_selecao(titulo='Git',
-                                         comando=None,
-                                         quadro=quadro)
+    caixa_de_selecao(titulo='Git',
+                     comando=None,
+                     variavel=estado_caixa_selecao_git,
+                     quadro=quadro)
 
     # Visualização do processo de instrâcia do novo projeto
     texto_de_saida = caixa_de_texto_grande(quadro=quadro)
@@ -215,7 +244,7 @@ def main():
         comando=lambda: instancias_do_projeto(
             elemento_caminho_pasta.get(),
             texto_de_saida,
-            caixa_selecao_git), quadro=janela)
+            estado_caixa_selecao_git.get()), quadro=janela)
 
     janela.mainloop()
 

@@ -62,10 +62,11 @@ def caixa_de_mensagem_erro(titulo: str, corpo_mensagem: str):
     showerror(title=titulo, message=corpo_mensagem)
 
 
-def caixa_de_selecao(titulo, comando, quadro) -> Checkbutton:
+def caixa_de_selecao(titulo, comando, quadro, variavel) -> Checkbutton:
     caixa = Checkbutton(quadro,
-                       text=titulo,
-                       command=comando,
-                       onvalue='agree',
-                       offvalue='disagree').pack()
+                        text=titulo,
+                        command=comando,
+                        variable=variavel,
+                        onvalue=1,
+                        offvalue=0).pack()
     return caixa
