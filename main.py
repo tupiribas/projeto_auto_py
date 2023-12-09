@@ -25,67 +25,27 @@ def verificar_instacao_python(elemento: tk.Entry) -> bool:
     Verifica se o Python está instalado na máquina local
     ### Atribuições
     ---
-    1. Executa o Power Shell como ADM da máquina;
-    2. Verifica se o Python está instalado
-    3. Retorna ao usuário se o está instalado na caixa grande de texto\n
-    parâmetros:
-    elemento : tk.Entry (widget caixa de texto grande)
-    return: void
-    '''
-    cmd = "python --version"
-    privilegios = "runas"  # Aumentar o nível de privilégios
-    terminal = "powershell.exe"  # Caminho do executável do power shell
-
-    try:
-        execute = shell.ShellExecuteEx(
-            lpVerb=privilegios, lpFile=terminal, lpParameters=cmd)
-        if not execute:
-            # Adicioanar mensagem ao quadro principal
-            elemento.insert(tk.END, 'O python NÃO está instalado!\n')
-            elemento.update_idletasks()
-    except error:
-        caixa_de_mensagem_erro(
-            "Erro!", "Erro ao verificar se o Python está instalado.")
-    return True
-
-
-def verificar_instalacao_git(elemento: tk):
-    '''
-    ## Verificar Instalação do Git
-    ---
-    Verifica se o Git está instalado na máquina local
-    ### Atribuições
-    ---
-    1. Verifica se o Python está instalado via terminal
+    1. Verifica se o Python está instalado
     2. Retorna ao usuário se o está instalado na caixa grande de texto\n
     parâmetros:
     elemento : tk.Entry (widget caixa de texto grande)
     return: void
     '''
-    # Por exemplo, se estiver usando o Windows:
-    cmd = "git --version"
+    cmd_verificar_python = "python --version"
 
-    elemento.insert(
-        tk.END, "\nVerificando se o Git está instalado...")
-    elemento.update_idletasks()
-
-    # Execute o comando de verificação do Git
     try:
-        saida_terminal = check_output(args=cmd,
+        texto_de_saida = check_output(args=cmd_verificar_python,
                                       shell=False,
                                       stderr=STDOUT,
                                       text=True)
         # Enviar mensagem final positiva
         elemento.insert(
-            tk.END, "\n\nExcelente!\nO Git já está instalado!")
+            tk.END, f"Excelente!\nO Python já está instalado! \n{texto_de_saida}")
         elemento.update_idletasks()
-        print(saida_terminal)
-    except CalledProcessError as er:
-        # Enviar mensagem final positiva
-        elemento.insert(
-            tk.END, "\n\nOpa!\nO GIT NÃO ESTÁ INSTALADO!")
-        elemento.update_idletasks()
-        print(f"Retorno da verificação da instalação do Git: {er}")
+    except error:
+        caixa_de_mensagem_erro(
+            "Erro!", "Erro ao verificar se o Python está instalado.")
+    return True
 
 
 def criar_ambiente_virtual(caminho_arquivo: str, elemento: tk):
@@ -107,7 +67,7 @@ def criar_ambiente_virtual(caminho_arquivo: str, elemento: tk):
     try:
         # Adicioanar mensagem ao quadro principal
         elemento.insert(
-            tk.END, "Tenha paciência...\nEstou criando o ambiente virtual...\n")
+            tk.END, "\nTenha paciência...\nEstou criando o ambiente virtual...\n")
         elemento.update_idletasks()
 
         run(cmd, cwd=caminho_arquivo, check=True, stdout=PIPE, stderr=PIPE)
@@ -123,7 +83,57 @@ def criar_ambiente_virtual(caminho_arquivo: str, elemento: tk):
     except CalledProcessError:
         # Envia mensagem de erro na tela
         caixa_de_mensagem_erro(
-            "Erro", "Ocorreu um erro ao executar a operação de criar pasta venv.")
+            "Erro", "Ocorreu um erro ao executar a operação de criar pasta env.")
+
+
+def instalacao_git(elemento: tk):
+    '''
+    ## Verificar Instalação do Git
+    ---
+    Verifica se o Git está instalado na máquina local
+    ### Atribuições
+    ---
+    1. Verifica se o Python está instalado via terminal
+    2. Retorna ao usuário se o está instalado na caixa grande de texto\n
+    parâmetros:
+    elemento : tk.Entry (widget caixa de texto grande)
+    return: void
+    '''
+    # Por exemplo, se estiver usando o Windows:
+    cmd_verificar_git = "git --version"
+
+    elemento.insert(
+        tk.END, "\nVerificando se o Git está instalado...")
+    elemento.update_idletasks()
+
+    # Execute o comando de verificação do Git
+    try:
+        texto_de_saida = check_output(args=cmd_verificar_git,
+                                      shell=False,
+                                      stderr=STDOUT,
+                                      text=True)
+        # Enviar mensagem final positiva
+        elemento.insert(
+            tk.END, f"\n\nExcelente!\nO Git já está instalado! \n{texto_de_saida}")
+        elemento.update_idletasks()
+    except CalledProcessError:
+        # Enviar mensagem final negativa
+        from subprocess import run, CalledProcessError
+        elemento.insert(
+            tk.END, "\n\nOpa!\nO GIT NÃO ESTÁ INSTALADO!\nPode deixar que eu instalo...\n\n")
+        elemento.update_idletasks()
+
+        # Instalação do GIT
+        CMD_INSTALAR_GIT = "Set-ExecutionPolicy Bypass -Scope Process -Force;Install-Module -Name Posh-Git;"
+        TERMINAL = "powershell.exe"  # Caminho do executável do power shell
+
+        try:
+            run([TERMINAL, "-Command", CMD_INSTALAR_GIT], check=True)
+            elemento.insert(tk.END, 'O Git foi instalado com sucesso!\n')
+            elemento.update_idletasks()
+        except CalledProcessError as e:
+            caixa_de_mensagem_erro(titulo="Erro!",
+                                   corpo_mensagem=f"Erro ao instalar o Git {e}")
 
 
 def ativar_politicas_execucao(elemento: tk):
@@ -176,12 +186,13 @@ def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk):
         # Manda mensagem de erro
         caixa_de_mensagem_erro(
             'Erro!', 'O python não está instalado! \nSiga as recomendações no repositório do projeto.')
-    # criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
-    #                        elemento=elementos[0])
-    # ativar_politicas_execucao(elemento=elementos[0])
+    criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
+                           elemento=elementos[0])
+    ativar_politicas_execucao(elemento=elementos[0])
+
     # Instalação do programa Git
     if elementos[1] == 1:
-        verificar_instalacao_git(elemento=elementos[0])
+        instalacao_git(elemento=elementos[0])
 
 
 def selecionar_caminho_pasta(elemento: tk.Entry) -> str:
