@@ -179,6 +179,7 @@ def instancias_do_projeto(caminho_do_projeto: str, *elementos: tk):
     # criar_ambiente_virtual(caminho_arquivo=caminho_do_projeto,
     #                        elemento=elementos[0])
     # ativar_politicas_execucao(elemento=elementos[0])
+    # Instalação do programa Git
     if elementos[1] == 1:
         verificar_instalacao_git(elemento=elementos[0])
 
@@ -209,32 +210,38 @@ def main():
     # Criar Janela principal
     janela = tk.Tk()
     janela.title("Criar Projeto Python")
+    janela.resizable(False, False)
 
-    # Cria um quadro (frame) dentro da janela princial
-    quadro = tk.Frame(janela)
-    quadro.pack(padx=20, pady=20)
+    # Frames
+    quadro_mostrar_pasta = tk.Frame(janela)
+    quadro_mostrar_pasta.pack(side=tk.TOP, padx=10)
+    quadros = tk.Frame(janela)
+    quadros.pack(padx=20, pady=10)
 
     # Obter o caminho da pasta do novo projeto
     mostrar_texto(titulo="Informe a pasta do novo projeto:",
-                  quadro=quadro)
-    elemento_caminho_pasta = entrada_de_dados(largura=50, quadro=quadro)
-    clicar_no_botao(titulo="Procurar Pasta...",
-                    comando=lambda: selecionar_caminho_pasta(
-                        elemento=elemento_caminho_pasta),
-                    quadro=quadro)
+                  quadro=quadro_mostrar_pasta)
+    elemento_caminho_pasta = entrada_de_dados(largura=50,
+                                              quadro=quadro_mostrar_pasta)
+    elemento_caminho_pasta.pack(side=tk.LEFT, padx=10)
+    botao_procurar_pasta = clicar_no_botao(titulo="Procurar Pasta...",
+                                           comando=lambda: selecionar_caminho_pasta(
+                                               elemento=elemento_caminho_pasta),
+                                           quadro=quadro_mostrar_pasta)
+    botao_procurar_pasta.pack(side=tk.LEFT)
 
     # Variável de estado - caixa de selecao
     mostrar_texto(titulo="Quais programas você deseja instalar?",
-                  quadro=quadro)
+                  quadro=quadros)
     estado_caixa_selecao_git = tk.IntVar()
     # Selecionar instaladores - falta incluir função na caixa de seleção
     caixa_de_selecao(titulo='Git',
                      comando=None,
                      variavel=estado_caixa_selecao_git,
-                     quadro=quadro)
+                     quadro=quadros)
 
     # Visualização do processo de instrâcia do novo projeto
-    texto_de_saida = caixa_de_texto_grande(quadro=quadro)
+    texto_de_saida = caixa_de_texto_grande(quadro=quadros)
 
     # Enviar dados do projeto ou sair
     clicar_no_botao_expassado(
