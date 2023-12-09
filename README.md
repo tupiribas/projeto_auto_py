@@ -20,48 +20,21 @@ Para mais informações: [Link do instalador para mais versões](https://www.pyt
 
 ### 🔧 Instalação
 
-É simples, siga esses pequenos passos:
+É simples:
 
+1. Instale o projeto
 
-1. Instale o Python
+    [Instalador_PyAutoProject_1.5.4.exe](instalador/Instalador_PyAutoProject_1.5.4.exe)
 
-    [Python-3.11.5-amd64.exe](https://www.python.org/ftp/python/3.11.5/python-3.11.5-amd64.exe)
-
-
-2. Instale o projeto
-
-    [projeto_auto_py-master.zip](https://github.com/tupiribas/projeto_auto_py/archive/refs/heads/master.zip)
-
-3. Descompate o projeto
-
-4. Abra o executável (.exe)
-
-    Para **abrir o executável do projeto** é por esse caminho:
-    
-        C:\...\projeto_auto_py-master\dist\main.exe
 
 **Pronto!**
 **Agora, é só executar e ser feliz.**
 
-## ⚙️ Demonstração do Funcionamento
+## ⚙️ Imagens do Programa
 
-#### 1. Tela Principal: 
+#### Tela Principal: 
 
 ![Mostrando a tela principal do projeto após abrir o executável](demo/01_tela_principal.png)
-
-#### 2. Selecionando a Pasta do Projeto:
-
-![Mostrando a tela principal, junto à tela do explorador de arquivos, após clicar no botão "Procurar Pasta"](demo/02_nova_pasta_do_projeto.png)
-
-#### 3. Enviando Arquivo: 
-![Mostrando a tela principal, após clicar no botão "Enviar"](demo/03_enviar.png)
-
-#### 4. Projeto Criado com Sucesso: 
-![Mostrando a pasta .env (ambiente virtual) do Python criada e mostrando a mensagem do projeto criado com sucesso.](demo/04_projeto_criado_com_sucesso.png)
-
-
-### Processos no Windows
-![Esse foi o processo de carga da memória RAM](demo/processo_memoria_em_exec.png)
 
 ## 🛠️ Bibliotecas
 
@@ -73,7 +46,7 @@ Usei [SemVer](http://semver.org/) para controle de versão. Para as versões dis
 
 ## ✒️ Autor
 
-* **Tupi Guedes** - *Total* - [tupiribas](https://github.com/tupiribas)
+* **Tupi Guedes** - [tupiribas](https://github.com/tupiribas)
 
 ## 📄 Licença
 
